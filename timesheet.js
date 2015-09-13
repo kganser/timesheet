@@ -91,14 +91,14 @@
         return [
           dateIcon(today),
           {div: {className: 'task', children: [
-            {input: {type: 'text', placeholder: 'task', onkeyup: function(e) {
-              task = this.value;
-              var items = task.length < 2 ? [] : Object.keys(tasks).filter(function(item) {
-                return ~item.toLowerCase().indexOf(task.toLowerCase());
-              });
-              jsml(items.map(function(item) {
+            {input: {type: 'text', placeholder: 'task', children: function(e) {
+              task = e;
+            }, onkeyup: function(e) {
+              var value = this.value;
+              jsml((value.length < 2 ? [] : Object.keys(tasks).filter(function(item) {
+                return ~item.toLowerCase().indexOf(value.toLowerCase());
+              })).map(function(item) {
                 return {li: {children: item, onclick: function() {
-                  task = item;
                   e.target.value = item;
                   jsml(null, suggest, true);
                   hours.focus();
@@ -116,7 +116,8 @@
           {input: {type: 'text', className: 'hours', placeholder: 'hours', children: function(e) { hours = e; }}},
           {button: {children: function(e) { add = e; return 'Add'; }, disabled: true, onclick: function(e) {
             this.disabled = true;
-            var date = dateString(today),
+            var name = task.value,
+                date = dateString(today),
                 time = parseFloat(hours.value);
             if (!time || time < 0) {
               this.disabled = false;
@@ -125,12 +126,12 @@
             } else {
               var success = function() {
                 e.target.disabled = false;
-                entries.get(date).insert(time, task);
-                tasks[task] = 1;
+                entries.get(date).insert(time, name);
+                tasks[name] = 1;
               };
-              db.put('entries/'+date+'/'+encodeURIComponent(task), time).then(function(e) {
+              db.put('entries/'+date+'/'+encodeURIComponent(name), time).then(function(e) {
                 if (!e) return success();
-                var record = {}; record[task] = time;
+                var record = {}; record[name] = time;
                 db.put('entries/'+date, record).then(success);
               });
             }
@@ -154,15 +155,24 @@
                   totals[task] = (totals[task] || 0) + date[task];
                 });
               });
-              jsml({ul: Object.keys(totals).concat([1]).map(function(task, i, arr) {
-                var last = i == arr.length-1,
-                    time = last ? total : totals[task];
-                if (!last) total += time;
-                return {li: {className: last ? 'total' : '', children: [
-                  {div: {className: 'time', children: time+' h'}},
-                  {div: {className: 'name', children: last ? 'Total' : task}}
-                ]}};
-              })}, report, true);
+              var tasks = Object.keys(totals);
+              jsml([
+                {ul: tasks.sort().concat([1]).map(function(task, i) {
+                  var last = i == tasks.length,
+                      time = last ? total : totals[task];
+                  if (!last) total += time;
+                  return {li: {className: last ? 'total' : '', children: [
+                    {div: {className: 'time', children: time+' h'}},
+                    {div: {className: 'name', children: last ? 'Total' : task}}
+                  ]}};
+                })},
+                !tasks.length || {a: {
+                  href: 'data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(totals)),
+                  download: 'timesheet.json',
+                  className: 'download',
+                  children: 'Download'
+                }}
+              ], report, true);
             });
           })]};
         })}

@@ -40,12 +40,11 @@ header button {
 nav {
   display: inline-block;
   margin: 5px auto 15px auto;
-  padding: 4px 2px;
+  padding: 4px;
   background: white;
 }
 nav span {
   display: inline-block;
-  margin: 0 2px;
   padding: 5px 10px;
   cursor: pointer;
 }
@@ -162,12 +161,17 @@ header .report li {
 .remove:hover, .remove:focus {
   background: #a33;
 }
-.previous {
+.previous, .download {
   display: block;
   clear: both;
-  margin: 0 auto 20px auto;
+  margin: 10px auto 20px auto;
   padding: 5px 20px;
-  background: #33a;
+  background: #999;
   color: white;
   border: none;
+}
+.download {
+  display: inline-block;
+  text-decoration: none;
+  margin-left: 130px;
 }
