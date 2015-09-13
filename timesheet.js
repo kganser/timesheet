@@ -63,8 +63,8 @@
       today = new Date(),
       now = today.getTime(),
       dayms = 24*60*60*1000,
-      issues = {}, dates = {},
-      issue, hours, entries, add, form, suggest, report;
+      tasks = {}, dates = {},
+      task, hours, entries, add, form, suggest, report;
   var dateString = function(d) {
     var y = d.getFullYear(),
         m = d.getMonth()+1,
@@ -78,7 +78,7 @@
     ]}};
   };
   db.get('entries', false, function(path) {
-    if (path.length) return function(issue) { issues[issue] = 1; };
+    if (path.length) return function(task) { tasks[task] = 1; };
   });
   jsml([
     {header: [
@@ -90,15 +90,15 @@
         form = e;
         return [
           dateIcon(today),
-          {div: {className: 'issue', children: [
-            {input: {type: 'text', placeholder: 'issue', onkeyup: function(e) {
-              issue = this.value;
-              var items = issue.length < 2 ? [] : Object.keys(issues).filter(function(item) {
-                return ~item.toLowerCase().indexOf(issue.toLowerCase());
+          {div: {className: 'task', children: [
+            {input: {type: 'text', placeholder: 'task', onkeyup: function(e) {
+              task = this.value;
+              var items = task.length < 2 ? [] : Object.keys(tasks).filter(function(item) {
+                return ~item.toLowerCase().indexOf(task.toLowerCase());
               });
               jsml(items.map(function(item) {
                 return {li: {children: item, onclick: function() {
-                  issue = item;
+                  task = item;
                   e.target.value = item;
                   jsml(null, suggest, true);
                   hours.focus();
@@ -123,11 +123,12 @@
             } else {
               var success = function() {
                 e.target.disabled = false;
-                entries.get(date).insert(time, issue);
+                entries.get(date).insert(time, task);
+                tasks[task] = 1;
               };
-              db.put('entries/'+date+'/'+encodeURIComponent(issue), time).then(function(e) {
+              db.put('entries/'+date+'/'+encodeURIComponent(task), time).then(function(e) {
                 if (!e) return success();
-                var record = {}; record[issue] = time;
+                var record = {}; record[task] = time;
                 db.put('entries/'+date, record).then(success);
               });
             }
@@ -147,17 +148,17 @@
             }).then(function(data) {
               var totals = {}, total = 0;
               Object.keys(data).forEach(function(date) {
-                Object.keys(date = data[date]).forEach(function(issue) {
-                  totals[issue] = (totals[issue] || 0) + date[issue];
+                Object.keys(date = data[date]).forEach(function(task) {
+                  totals[task] = (totals[task] || 0) + date[task];
                 });
               });
-              jsml({ul: Object.keys(totals).concat([1]).map(function(issue, i, arr) {
+              jsml({ul: Object.keys(totals).concat([1]).map(function(task, i, arr) {
                 var last = i == arr.length-1,
-                    time = last ? total : totals[issue];
+                    time = last ? total : totals[task];
                 if (!last) total += time;
                 return {li: {className: last ? 'total' : '', children: [
                   {div: {className: 'time', children: time+' h'}},
-                  {div: {className: 'name', children: last ? 'Total' : issue}}
+                  {div: {className: 'name', children: last ? 'Total' : task}}
                 ]}};
               })}, report, true);
             });
@@ -193,16 +194,16 @@
               e.disabled = add.disabled = false;
               new Array(days).join().split(',').forEach(function(x, i) {
                 var date = dateString(new Date(now-(page*days+i)*dayms));
-                entries.insert(model(data[date] || {}, function(hours, issue, index, items) {
+                entries.insert(model(data[date] || {}, function(hours, task, index, items) {
                   return {li: [
                     {button: {className: 'remove', children: '✕', onclick: function(e) {
                       this.disabled = true;
-                      db.delete('entries/'+date+'/'+encodeURIComponent(issue)).then(function() {
-                        items.remove(issue);
+                      db.delete('entries/'+date+'/'+encodeURIComponent(task)).then(function() {
+                        items.remove(task);
                       });
                     }}},
                     {div: {className: 'time', children: hours+' h'}},
-                    {div: {className: 'name', children: issue}}
+                    {div: {className: 'name', children: task}}
                   ]};
                 }), date);
               });

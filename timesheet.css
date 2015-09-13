@@ -54,19 +54,19 @@ nav span {
 .date.sat div, .date.sun div {
   background: gray;
 }
-.issue {
+.task {
   display: inline-block;
   position: relative;
   width: 50%;
   min-width: 200px;
 }
-.issue input {
+.task input {
   box-sizing: border-box;
   width: 100%;
   margin: 0;
   padding: 1px 4px;
 }
-.issue ul {
+.task ul {
   display: none;
   position: absolute;
   left: 1px;
@@ -75,14 +75,14 @@ nav span {
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
 }
-.issue li {
+.task li {
   padding: 2px 5px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   cursor: pointer;
 }
-.issue li:hover {
+.task li:hover {
   background: #ebf2fc;
 }
 .hours {
