@@ -83,8 +83,8 @@
   jsml([
     {header: [
       {nav: [
-        {span: {children: 'Record', onclick: function() { document.body.className = ''; }}},
-        {span: {children: 'Report', onclick: function() { document.body.className = 'show-report'; }}}
+        {span: {className: 'record-tab', children: 'Record', onclick: function() { document.body.className = 'show-record'; }}},
+        {span: {className: 'report-tab', children: 'Report', onclick: function() { document.body.className = 'show-report'; }}}
       ]},
       {div: {className: 'record', children: function(e) {
         form = e;
@@ -119,7 +119,9 @@
             var date = dateString(today),
                 time = parseFloat(hours.value);
             if (!time || time < 0) {
+              this.disabled = false;
               alert('Invalid number of hours');
+              hours.focus();
             } else {
               var success = function() {
                 e.target.disabled = false;

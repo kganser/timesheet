@@ -10,6 +10,12 @@ ul {
   margin: 0;
   padding: 0;
 }
+input, button {
+  outline: none;
+}
+button {
+  cursor: pointer;
+}
 .report, .show-report .record {
   display: none;
 }
@@ -22,30 +28,43 @@ header {
   background: #ececec;
   text-align: center;
 }
+header input, header button {
+  font-size: 16px;
+  border: none;
+  padding: 11px 15px;
+}
+header button {
+  background: #3a3;
+  color: white;
+}
 nav {
-  margin: 0 auto 20px auto;
+  display: inline-block;
+  margin: 5px auto 15px auto;
+  padding: 4px 2px;
+  background: white;
 }
 nav span {
   display: inline-block;
-  width: 100px;
-  background: white;
   margin: 0 2px;
-  padding: 3px 0;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+  padding: 5px 10px;
   cursor: pointer;
+}
+.show-record .record-tab, .show-report .report-tab {
+  background: #33a;
+  color: white;
 }
 .date {
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: top;
   width: 50px;
   background: white;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .2);
+  border-bottom: solid 1px #ccc;
   text-align: center;
   margin-right: 10px;
   padding-bottom: 5px;
 }
 .date div {
-  background: #a00;
+  background: #a33;
   color: white;
   font-size: 11px;
   padding: 2px 0;
@@ -64,13 +83,12 @@ nav span {
   box-sizing: border-box;
   width: 100%;
   margin: 0;
-  padding: 1px 4px;
 }
 .task ul {
   display: none;
   position: absolute;
-  left: 1px;
-  right: 1px;
+  left: 0;
+  right: 0;
   text-align: left;
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
@@ -86,9 +104,8 @@ nav span {
   background: #ebf2fc;
 }
 .hours {
-  width: 5em;
+  width: 3em;
   margin: 0 5px;
-  padding: 1px 4px;
 }
 header .report ul {
   margin: 0 auto;
@@ -143,14 +160,14 @@ header .report li {
   padding: 2px 5px;
 }
 .remove:hover, .remove:focus {
-  background: #a00;
+  background: #a33;
 }
 .previous {
   display: block;
   clear: both;
   margin: 0 auto 20px auto;
   padding: 5px 20px;
-  background: white;
+  background: #33a;
+  color: white;
   border: none;
-  box-shadow: 0 0 5px rgba(0, 0, 0, .2);
 }
