@@ -215,4 +215,4 @@
       {div: {className: 'report', children: function(e) { report = e; }}}
     ]}}
   ], document.body);
-)());
+}());
