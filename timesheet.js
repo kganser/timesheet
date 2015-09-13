@@ -82,6 +82,7 @@
   });
   jsml([
     {header: [
+      {h1: 'Timesheet'},
       {nav: [
         {span: {className: 'record-tab', children: 'Record', onclick: function() { document.body.className = 'show-record'; }}},
         {span: {className: 'report-tab', children: 'Report', onclick: function() { document.body.className = 'show-report'; }}}
