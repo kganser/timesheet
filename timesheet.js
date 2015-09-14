@@ -92,7 +92,7 @@
         return [
           dateIcon(today),
           {div: {className: 'task', children: [
-            {input: {type: 'text', placeholder: 'task', children: function(e) {
+            {input: {type: 'text', placeholder: 'task', autofocus: true, children: function(e) {
               task = e;
             }, onkeyup: function(e) {
               var value = this.value;
@@ -114,7 +114,7 @@
             }}},
             {ul: function(e) { suggest = e; }}
           ]}},
-          {input: {type: 'text', className: 'hours', placeholder: 'hours', children: function(e) { hours = e; }}},
+          {input: {type: 'number', min: '0', max: '24', step: '.5', className: 'hours', placeholder: 'hours', children: function(e) { hours = e; }}},
           {button: {children: function(e) { add = e; return 'Add'; }, disabled: true, onclick: function(e) {
             this.disabled = true;
             var name = task.value,
@@ -209,7 +209,7 @@
                 var date = dateString(new Date(now-(page*days+i)*dayms));
                 entries.insert(model(data[date] || {}, function(hours, task, index, items) {
                   return {li: [
-                    {button: {className: 'remove', children: '✕', onclick: function(e) {
+                    {button: {className: 'remove', children: '×', onclick: function(e) {
                       this.disabled = true;
                       db.delete('entries/'+date+'/'+encodeURIComponent(task)).then(function() {
                         items.remove(task);

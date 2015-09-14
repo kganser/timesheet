@@ -34,6 +34,8 @@ header:before, h1 {
   font: bold 50px sans-serif;
   text-transform: uppercase;
   letter-spacing: .03em;
+  float: left;
+  color: #ccc;
 }
 header:before {
   float: right;
@@ -41,17 +43,15 @@ header:before {
   display: block;
   visibility: hidden;
 }
-h1 {
-  float: left;
-  color: #ccc;
-}
 header input, header button {
   font-size: 16px;
+  line-height: 40px;
   border: none;
-  padding: 11px 15px;
+  padding: 0 0 0 15px;
   margin: 0 0 2px 0;
 }
 header button {
+  padding-right: 15px;
   background: #3a3;
   color: white;
 }
@@ -120,7 +120,7 @@ nav span {
   background: #ebf2fc;
 }
 .hours {
-  width: 3.2em;
+  width: 4.2em;
   margin: 0 5px;
 }
 header .report ul {
@@ -173,7 +173,9 @@ header .report li {
   color: white;
   float: right;
   margin-left: 10px;
-  padding: 2px 5px;
+  padding: 0 3px;
+  font-size: 22px;
+  line-height: 17px;
 }
 .remove:hover, .remove:focus {
   background: #a33;
