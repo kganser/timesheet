@@ -64,7 +64,7 @@
         model.insertAll(data_);
       }
     };
-  }
+  };
   var dateString = function(d) {
     var y = d.getFullYear(),
         m = d.getMonth()+1,

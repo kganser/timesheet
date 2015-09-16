@@ -176,13 +176,11 @@ header .report {
 .remove {
   background: #ececec;
   border: none;
+  font: bold 16px/17px arial sans-serif;
   color: white;
   float: right;
   margin-left: 10px;
-  padding: 3px;
-  font-size: 22px;
-  line-height: 11px;
-  overflow: hidden;
+  padding: 0 5px;
 }
 .remove:hover, .remove:focus {
   background: #a33;
