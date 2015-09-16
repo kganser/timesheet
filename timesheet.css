@@ -10,7 +10,7 @@ ul {
   margin: 0;
   padding: 0;
 }
-input, button {
+input {
   outline: none;
 }
 button {
@@ -180,9 +180,10 @@ header .report {
   color: white;
   float: right;
   margin-left: 10px;
-  padding: 0 3px;
+  padding: 3px;
   font-size: 22px;
-  line-height: 17px;
+  line-height: 11px;
+  overflow: hidden;
 }
 .remove:hover, .remove:focus {
   background: #a33;
