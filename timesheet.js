@@ -189,8 +189,12 @@
                 ]}};
               })},
               !tasks.length || {a: {
-                href: 'data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(totals)),
-                download: 'timesheet.json',
+                href: 'data:text/csv;charset=utf-8,'+encodeURIComponent(
+                  'Task,Hours\r\n'+tasks.map(function(task) {
+                    return (/[",]/.test(task) ? '"'+task.replace(/"/g, '""')+'"' : task)+','+totals[task];
+                  }).join('\r\n')
+                ),
+                download: 'timesheet.csv',
                 className: 'download',
                 children: 'Download'
               }}
