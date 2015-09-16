@@ -16,6 +16,12 @@ input, button {
 button {
   cursor: pointer;
 }
+.error {
+  padding: 5px;
+  text-align: center;
+  background: #a33;
+  color: white;
+}
 .report, .show-report .record {
   display: none;
 }
@@ -27,6 +33,7 @@ header {
   padding-bottom: 20px;
   background: #ececec;
   text-align: center;
+  overflow-x: hidden;
 }
 header:before, h1 {
   margin: -10px 0;
@@ -120,7 +127,7 @@ nav span {
   background: #ebf2fc;
 }
 .hours {
-  width: 4.2em;
+  width: 4.1em;
   margin: 0 5px;
 }
 header .report ul {

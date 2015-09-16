@@ -1,4 +1,12 @@
 (function() {
+  var db = objectDB.open('timesheet', {entries: {}}),
+      days = 'Sun Mon Tues Wed Thurs Fri Sat'.split(' '),
+      months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),
+      today = new Date(),
+      now = today.getTime(),
+      dayms = 24*60*60*1000,
+      tasks = {}, dates = {},
+      task, hours, entries, add, form, suggest, report;
   var model = function(data, insert) {
     var keys = !Array.isArray(data) && Object.keys(data),
         model, elem;
@@ -57,14 +65,6 @@
       }
     };
   }
-  var db = objectDB.open('timesheet', {entries: {}}),
-      days = 'Sun Mon Tues Wed Thurs Fri Sat'.split(' '),
-      months = 'Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec'.split(' '),
-      today = new Date(),
-      now = today.getTime(),
-      dayms = 24*60*60*1000,
-      tasks = {}, dates = {},
-      task, hours, entries, add, form, suggest, report;
   var dateString = function(d) {
     var y = d.getFullYear(),
         m = d.getMonth()+1,
@@ -77,9 +77,13 @@
       months[date.getMonth()]+' '+date.getDate()
     ]}};
   };
-  db.get('entries', false, function(path) {
-    if (path.length) return function(task) { tasks[task] = 1; };
-  });
+  try {
+    db.get('entries', false, function(path) {
+      if (path.length) return function(task) { tasks[task] = 1; };
+    });
+  } catch (e) {
+    return jsml({div: {className: 'error', children: 'Your browser does not fully support indexedDB.'}}, document.body);
+  }
   jsml([
     {header: [
       {h1: 'Timesheet'},
