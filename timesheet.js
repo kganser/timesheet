@@ -5,8 +5,8 @@
       today = new Date(),
       now = today.getTime(),
       dayms = 24*60*60*1000,
-      tasks = {}, dates = {},
-      task, hours, entries, add, form, suggest, report;
+      tasks = {},
+      task, hours, entries, add, form, suggest, report, first, last;
   var model = function(data, insert) {
     var keys = !Array.isArray(data) && Object.keys(data),
         model, elem;
@@ -72,10 +72,12 @@
     return [y, m < 10 ? '0'+m : m, d < 10 ? '0'+d : d].join('-');
   };
   var dateIcon = function(date, click) {
-    return {div: {className: 'date '+days[date.getDay()].toLowerCase(), onclick: click, children: [
-      {div: days[date.getDay()]},
-      months[date.getMonth()]+' '+date.getDate()
-    ]}};
+    return {div: {
+      className: 'date '+days[date.getDay()].toLowerCase(),
+      dataset: {date: dateString(date)},
+      onclick: click,
+      children: [{div: days[date.getDay()]}, months[date.getMonth()]+' '+date.getDate()]
+    }};
   };
   try {
     db.get('entries', false, function(path) {
@@ -143,45 +145,59 @@
           }}}
         ];
       }}},
-      {div: {className: 'report', children: [
-        {ul: new Array(36 + today.getDay()).join().split(',').map(function(x, i, days) {
-          var date = new Date(now-(days.length-i-1)*dayms),
-              value = dateString(date);
-          return {li: [dateIcon(date, function() {
-            this.classList.toggle('selected');
-            if (this.classList.contains('selected')) dates[value] = 1;
-            else delete dates[value];
-            db.get('entries', false, function(path) {
-              if (path.length) return path[0] in dates;
-            }).then(function(data) {
-              var totals = {}, total = 0;
-              Object.keys(data).forEach(function(date) {
-                Object.keys(date = data[date]).forEach(function(task) {
-                  totals[task] = (totals[task] || 0) + date[task];
-                });
+      {div: {className: 'report', children: new Array(36 + today.getDay()).join().split(',').map(function(x, i, days) {
+        return dateIcon(new Date(now-(days.length-i-1)*dayms), function() {
+          if (this == first) {
+            first = last;
+            last = null;
+          } else if (this == last) {
+            last = null;
+          } else if (first) {
+            last = this;
+          } else {
+            first = this;
+          }
+          var range = first && last,
+              values = [], end;
+          for (var node = this.parentNode.firstChild; node; node = node.nextSibling) {
+            if (end = node == first || node == last)
+              values.push(node.dataset.date);
+            node.classList.toggle('selected', end || range && values.length == 1);
+          }
+          if (!values.length) return jsml(null, report, true);
+          db.get('entries', false, function(path) {
+            if (!path.length) return {
+              lowerBound: values[0],
+              upperBound: range ? values[1] : values[0]
+            };
+          }).then(function(data) {
+            var totals = {}, total = 0;
+            Object.keys(data).forEach(function(date) {
+              Object.keys(date = data[date]).forEach(function(task) {
+                totals[task] = (totals[task] || 0) + date[task];
               });
-              var tasks = Object.keys(totals);
-              jsml([
-                {ul: tasks.sort().concat([1]).map(function(task, i) {
-                  var last = i == tasks.length,
-                      time = last ? total : totals[task];
-                  if (!last) total += time;
-                  return {li: {className: last ? 'total' : '', children: [
-                    {div: {className: 'time', children: time+' h'}},
-                    {div: {className: 'name', children: last ? 'Total' : task}}
-                  ]}};
-                })},
-                !tasks.length || {a: {
-                  href: 'data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(totals)),
-                  download: 'timesheet.json',
-                  className: 'download',
-                  children: 'Download'
-                }}
-              ], report, true);
             });
-          })]};
-        })}
-      ]}}
+            var tasks = Object.keys(totals);
+            jsml([
+              {ul: tasks.sort().concat([1]).map(function(task, i) {
+                var last = i == tasks.length,
+                    time = last ? total : totals[task];
+                if (!last) total += time;
+                return {li: {className: last ? 'total' : '', children: [
+                  {div: {className: 'time', children: time+' h'}},
+                  {div: {className: 'name', children: last ? 'Total' : task}}
+                ]}};
+              })},
+              !tasks.length || {a: {
+                href: 'data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(totals)),
+                download: 'timesheet.json',
+                className: 'download',
+                children: 'Download'
+              }}
+            ], report, true);
+          });
+        });
+      })}}
     ]},
     {div: {className: 'content', children: [
       {div: {className: 'record', children: [

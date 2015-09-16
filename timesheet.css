@@ -28,12 +28,15 @@ button {
 .show-report .report {
   display: block;
 }
+.show-report header {
+  overflow: auto;
+}
 header {
   margin: 0 -10px 20px -10px;
   padding-bottom: 20px;
   background: #ececec;
   text-align: center;
-  overflow-x: hidden;
+  overflow: hidden;
 }
 header:before, h1 {
   margin: -10px 0;
@@ -130,13 +133,10 @@ nav span {
   width: 4.1em;
   margin: 0 5px;
 }
-header .report ul {
+header .report {
   margin: 0 auto;
   width: 756px;
   text-align: left;
-}
-header .report li {
-  display: inline-block;
 }
 .report .date {
   margin: 0 2px 4px 2px;
