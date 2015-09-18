@@ -145,7 +145,7 @@
           }}}
         ];
       }}},
-      {div: {className: 'report', children: new Array(36 + today.getDay()).join().split(',').map(function(x, i, days) {
+      {div: {className: 'report', children: {div: new Array(36 + today.getDay()).join().split(',').map(function(x, i, days) {
         return dateIcon(new Date(now-(days.length-i-1)*dayms), function() {
           if (this == first) {
             first = last;
@@ -201,7 +201,7 @@
             ], report, true);
           });
         });
-      })}}
+      })}}}
     ]},
     {div: {className: 'content', children: [
       {div: {className: 'record', children: [
