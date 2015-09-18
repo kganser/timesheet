@@ -86,12 +86,12 @@
   } catch (e) {
     return jsml({div: {className: 'error', children: 'Your browser does not fully support indexedDB.'}}, document.body);
   }
-  jsml([
+  var page = jsml({div: {className: 'show-record', children: [
     {header: [
       {h1: 'Timesheet'},
       {nav: [
-        {span: {className: 'record-tab', children: 'Record', onclick: function() { document.body.className = 'show-record'; }}},
-        {span: {className: 'report-tab', children: 'Report', onclick: function() { document.body.className = 'show-report'; }}}
+        {span: {className: 'record-tab', children: 'Record', onclick: function() { page.className = 'show-record'; }}},
+        {span: {className: 'report-tab', children: 'Report', onclick: function() { page.className = 'show-report'; }}}
       ]},
       {div: {className: 'record', children: function(e) {
         form = e;
@@ -252,5 +252,5 @@
       ]}},
       {div: {className: 'report', children: function(e) { report = e; }}}
     ]}}
-  ], document.body);
+  ]}}, document.body);
 }());
